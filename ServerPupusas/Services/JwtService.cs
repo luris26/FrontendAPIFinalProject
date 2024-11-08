@@ -24,11 +24,11 @@ namespace FrontendAPIFinalProject.Services
             _expiresInMinutes = int.Parse(_configuration["JwtSettings:ExpiresInMinutes"]);
         }
 
-        public string GenerateToken(string username)
+        public string GenerateToken(string email)
         {
             var claims = new[]
             {
-                new Claim(JwtRegisteredClaimNames.Sub, username),
+                new Claim(JwtRegisteredClaimNames.Sub, email),
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
             };
 

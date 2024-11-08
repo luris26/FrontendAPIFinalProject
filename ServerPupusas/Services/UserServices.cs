@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using ServerPupusas.Models;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
 namespace FrontendAPIFinalProject.Services
 {
@@ -15,18 +16,18 @@ namespace FrontendAPIFinalProject.Services
             _dbFactory = dbFactory;
         }
 
-        public async Task<IEnumerable<User>> GetAllUsers()
-        {
-            var context = await _dbFactory.CreateDbContextAsync();
-            var users = await context.Users.ToListAsync();
-            return users;
-        }
-
         async Task<IEnumerable<User>> IUserService.GetAllUsers()
         {
             var context = await _dbFactory.CreateDbContextAsync();
             var users = await context.Users.ToListAsync();
             return users;
+        }
+        public async Task<User?> GetUserByUsername(string userEmail)
+        {
+            var context = await _dbFactory.CreateDbContextAsync();
+            var users = context.Users.FirstOrDefaultAsync(u => u.Email == userEmail);
+            return await users;
+
         }
     }
 }
