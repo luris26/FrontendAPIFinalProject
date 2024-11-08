@@ -1,7 +1,16 @@
+using FrontendAPIFinalProject.Services;
+using Microsoft.EntityFrameworkCore;
+using ServerPupusas.Models;
+
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddControllers();
+
+builder.Services.AddDbContextFactory<ApplicationDbContext>(options =>
+    options.UseNpgsql(builder.Configuration.GetConnectionString("PostgresConnection")));
+builder.Services.AddScoped<IUserService, UserService>();
 
 var app = builder.Build();
 
@@ -33,6 +42,8 @@ app.MapGet("/weatherforecast", () =>
 .WithName("GetWeatherForecast")
 .WithOpenApi();
 
+// app.UseHttpsRedirection();
+app.MapControllers();
 app.Run();
 
 record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
