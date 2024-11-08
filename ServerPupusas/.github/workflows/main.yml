@@ -1,1 +1,36 @@
+name: Directory-Purusas
 
+on:
+  push:
+    branches:
+        - main 
+
+jobs:
+  DeployingPipeline:
+    runs-on: self-hosted
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Connect to DockerHub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: "Build Image and Push to Docker HUB"
+        run: |
+          docker build -t luris26/directory:$GITHUB_RUN_ID .
+          docker push luris26/directory:$GITHUB_RUN_ID
+      
+      - name: Build Kubernetes
+        run: |
+          export PATH=$PATH:~/.nix-profile/bin:/nix/var/nix/profiles/default/bin
+          export DOCKERHUB_USERNAME=${{ secrets.DOCKERHUB_USERNAME }}
+          export IMAGE_TAG=${{ github.run_number }}
+          kubectl -n luris-directory delete configmap directory-web-postgres-init || true
+          kubectl -n luris-directory create configmap directory-web-postgres-init --from-file=init.sql
+          for file in ./kubeDirectory/*; do
+              echo "envsubst applying to $file"
+              cat $file | envsubst | kubectl apply -f -
+          done
