@@ -27,18 +27,18 @@ spec:
               "-c",
               'if [ -z "$(ls -A /app/images)" ]; then cp -r /seedImg/* /app/images/; fi',
             ]
-          volumeMounts:
-            - name: podsstorage
-              mountPath: /app/images
+          # volumeMounts:
+          #   - name: podsstorage
+          #     mountPath: /app/images
       containers:
       - name: inventory-order-luris-api-final
         image: luris26/inventory-management-api-final-luris26:${IMAGE_ID}
         ports:
         - containerPort: 8080
-        volumeMounts:
-          - name: podsstorage
-            mountPath: /app/images
+        # volumeMounts:
+        #   - name: podsstorage
+        #     mountPath: /app/images
       volumes:
-        - name: podsstorage
-          persistentVolumeClaim:
-            claimName: inventory-order-luris-api-final-pvc
+        # - name: podsstorage
+        #   persistentVolumeClaim:
+        #     claimName: inventory-order-luris-api-final-pvc
