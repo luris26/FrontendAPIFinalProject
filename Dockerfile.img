@@ -1,7 +1,0 @@
-FROM alpine:latest
-
-RUN mkdir -p /seedImg
-
-COPY app/images /seedImg
-
-CMD ["sh", "-c", "while true; do sleep 3600; done"]
