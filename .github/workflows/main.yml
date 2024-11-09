@@ -21,7 +21,7 @@ jobs:
 
       - name: "Build Image and Push to Docker HUB"
         run: |
-          docker build -t luris26/inventory-management-api-final-luris26:latest -t luris26/inventory-management-api-luris26:${{github.run_number}} .
+          docker build -t luris26/inventory-management-api-final-luris26:latest -t luris26/inventory-management-api-final-luris26:${{github.run_number}} .
           docker push --all-tags luris26/inventory-management-api-final-luris26
 
       # - name: "Build Image/Pic To Docker Hub"
