@@ -1,9 +1,10 @@
-name: Directory-Purusas
+name: Inventory
 
 on:
   push:
     branches:
         - main 
+  workflow_dispatch:
 
 jobs:
   DeployingPipeline:
@@ -20,17 +21,20 @@ jobs:
 
       - name: "Build Image and Push to Docker HUB"
         run: |
-          docker build -t luris26/directory:$GITHUB_RUN_ID .
-          docker push luris26/directory:$GITHUB_RUN_ID
-      
+          docker build -t luris26/inventory-management-api-final-luris26:latest -t luris26/inventory-management-api-luris26:${{github.run_number}} .
+          docker push --all-tags luris26/inventory-management-api-final-luris26
+
+      # - name: "Build Image/Pic To Docker Hub"
+      #   run: |
+      #     docker build -f Dockerfile.img -t luris26/inventory-management-api-luris26-img:latest -t luris26/inventory-management-api-luris26-img:${{github.run_number}} .
+      #     docker push --all-tags luris26/inventory-management-api-luris26-img
+
       - name: Build Kubernetes
         run: |
-          export PATH=$PATH:~/.nix-profile/bin:/nix/var/nix/profiles/default/bin
-          export DOCKERHUB_USERNAME=${{ secrets.DOCKERHUB_USERNAME }}
-          export IMAGE_TAG=${{ github.run_number }}
-          kubectl -n luris-directory delete configmap directory-web-postgres-init || true
-          kubectl -n luris-directory create configmap directory-web-postgres-init --from-file=init.sql
-          for file in ./kubeDirectory/*; do
+          export PATH=$PATH:~.nix-profile/bin:/nix/var/nix/profiles/default/bin
+          export IMAGE_ID=${{ github.run_number }}
+
+          for file in ./kubeInventory/*; do
               echo "envsubst applying to $file"
-              cat $file | envsubst | kubectl apply -f -
+              cat $file | envsubst | kubectl apply -f -;
           done
