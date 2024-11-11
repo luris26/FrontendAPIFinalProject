@@ -36,8 +36,8 @@ spec:
         # image: luris26/inventory-management-api-final-luris26:19
         ports:
         - containerPort: 8080
-        volumeMounts:
-          - name: podsstorage
+        # volumeMounts:
+        #   - name: podsstorage
       #       mountPath: /app/images
       # volumes:
       #   - name: podsstorage
