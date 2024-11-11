@@ -1,3 +1,51 @@
+# apiVersion: apps/v1
+# kind: Deployment
+# metadata:
+#   name: inventory-order-luris-api-final-deployment
+#   namespace: luris-final-project
+# spec:
+#   replicas: 1
+#   selector:
+#     matchLabels:
+#       app: inventory-order-luris-api-final
+#   strategy:
+#     type: RollingUpdate
+#     rollingUpdate:
+#       maxSurge: 1
+#       maxUnavailable: 0
+#   template:
+#     metadata:
+#       labels:
+#         app: inventory-order-luris-api-final
+#     # spec:
+#     #   initContainers:
+#     #     - name: init-seed-images
+#     #       image: luris26/inventory-management-api-final-luris26-img:50
+#     #       command:
+#     #         [
+#     #           "sh",
+#     #           "-c",
+#     #           'if [ -z "$(ls -A /app/images)" ]; then cp -r /seedImg/* /app/images/; fi',
+#     #         ]
+#     #       volumeMounts:
+#     #         - name: podsstorage
+#     #           mountPath: /app/images
+#       containers:
+#       - name: inventory-order-luris-api-final
+#         image: luris26/inventory-management-api-final-luris26:${IMAGE_ID}
+#         # image: luris26/inventory-management-api-final-luris26:19
+#         ports:
+#         - containerPort: 8080
+#         # volumeMounts:
+#         #   - name: podsstorage
+#       #       mountPath: /app/images
+#       # volumes:
+#       #   - name: podsstorage
+#       #     persistentVolumeClaim:
+#       #       claimName: inventory-order-luris-api-final-pvc
+
+#             ###
+
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -17,31 +65,9 @@ spec:
     metadata:
       labels:
         app: inventory-order-luris-api-final
-    # spec:
-    #   initContainers:
-    #     - name: init-seed-images
-    #       image: luris26/inventory-management-api-final-luris26-img:50
-    #       command:
-    #         [
-    #           "sh",
-    #           "-c",
-    #           'if [ -z "$(ls -A /app/images)" ]; then cp -r /seedImg/* /app/images/; fi',
-    #         ]
-    #       volumeMounts:
-    #         - name: podsstorage
-    #           mountPath: /app/images
+    spec: 
       containers:
-      - name: inventory-order-luris-api-final
-        image: luris26/inventory-management-api-final-luris26:${IMAGE_ID}
-        # image: luris26/inventory-management-api-final-luris26:19
-        ports:
-        - containerPort: 8080
-        # volumeMounts:
-        #   - name: podsstorage
-      #       mountPath: /app/images
-      # volumes:
-      #   - name: podsstorage
-      #     persistentVolumeClaim:
-      #       claimName: inventory-order-luris-api-final-pvc
-
-            ###
+        - name: inventory-order-luris-api-final
+          image: luris26/inventory-management-api-final-luris26:${IMAGE_ID}
+          ports:
+            - containerPort: 8080
