@@ -5,7 +5,7 @@ metadata:
   namespace: luris-final-project
 spec:
   rules:
-  - host: final-project-luris.duckdns.org
+  - host: api.final-project-luris.duckdns.org
     http:
       paths:
       - path: /api
