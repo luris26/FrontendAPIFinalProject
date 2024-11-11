@@ -32,7 +32,8 @@ spec:
               mountPath: /app/images
       containers:
       - name: inventory-order-luris-api-final
-        image: luris26/inventory-management-api-final-luris26:${IMAGE_ID}
+        # image: luris26/inventory-management-api-final-luris26:${IMAGE_ID}
+        image: luris26/inventory-management-api-final-luris26:19
         ports:
         - containerPort: 8080
         volumeMounts:
