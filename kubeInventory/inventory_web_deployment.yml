@@ -38,10 +38,10 @@ spec:
         - containerPort: 8080
         volumeMounts:
           - name: podsstorage
-            mountPath: /app/images
-      volumes:
-        - name: podsstorage
-          persistentVolumeClaim:
-            claimName: inventory-order-luris-api-final-pvc
+      #       mountPath: /app/images
+      # volumes:
+      #   - name: podsstorage
+      #     persistentVolumeClaim:
+      #       claimName: inventory-order-luris-api-final-pvc
 
             ###
