@@ -39,5 +39,5 @@ jobs:
               cat $file | envsubst | kubectl apply -f -;
           done
 
-      #change the password for git
+      #added teh config
 
