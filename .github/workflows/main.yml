@@ -38,3 +38,6 @@ jobs:
               echo "envsubst applying to $file"
               cat $file | envsubst | kubectl apply -f -;
           done
+
+      #change the password for git
+
