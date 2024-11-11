@@ -39,5 +39,4 @@ jobs:
               cat $file | envsubst | kubectl apply -f -;
           done
 
-      #added teh config
 
