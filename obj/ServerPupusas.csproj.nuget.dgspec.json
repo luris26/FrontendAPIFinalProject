@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\luris\\Desktop\\server\\FrontendAPIFinalProject\\ServerPupusas.csproj": {}
+    "C:\\Users\\luris\\Desktop\\FrontendAPIFinalProject\\ServerPupusas.csproj": {}
   },
   "projects": {
-    "C:\\Users\\luris\\Desktop\\server\\FrontendAPIFinalProject\\ServerPupusas.csproj": {
+    "C:\\Users\\luris\\Desktop\\FrontendAPIFinalProject\\ServerPupusas.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\luris\\Desktop\\server\\FrontendAPIFinalProject\\ServerPupusas.csproj",
+        "projectUniqueName": "C:\\Users\\luris\\Desktop\\FrontendAPIFinalProject\\ServerPupusas.csproj",
         "projectName": "ServerPupusas",
-        "projectPath": "C:\\Users\\luris\\Desktop\\server\\FrontendAPIFinalProject\\ServerPupusas.csproj",
+        "projectPath": "C:\\Users\\luris\\Desktop\\FrontendAPIFinalProject\\ServerPupusas.csproj",
         "packagesPath": "C:\\Users\\luris\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\luris\\Desktop\\server\\FrontendAPIFinalProject\\obj\\",
+        "outputPath": "C:\\Users\\luris\\Desktop\\FrontendAPIFinalProject\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\luris\\AppData\\Roaming\\NuGet\\NuGet.Config"
