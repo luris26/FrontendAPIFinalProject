@@ -29,7 +29,7 @@ namespace FrontendAPIFinalProject.Controllers
             return await _userService.GetAllUsers();
         }
 
-        [HttpPut("{id}")]
+        [HttpPut("edit/{id}")]
         public async Task<IActionResult> EditUser(int id, [FromBody] UserCreateDto updatedUser)
         {
             var existingUser = await _context.Users.FindAsync(id);
@@ -50,7 +50,7 @@ namespace FrontendAPIFinalProject.Controllers
             return NoContent();
         }
 
-        [HttpDelete("{id}")]
+        [HttpDelete("delete/{id}")]
         public async Task<IActionResult> DeleteUser(int id)
         {
             var user = await _context.Users.FindAsync(id);

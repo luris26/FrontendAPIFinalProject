@@ -30,6 +30,7 @@ builder.Services.AddAuthentication()
             ValidAudience = builder.Configuration["JwtSettings:Audience"],
         };
     });
+
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowReactClient",
@@ -37,6 +38,7 @@ builder.Services.AddCors(options =>
                         .AllowAnyMethod()
                         .AllowAnyHeader());
 });
+
 var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
