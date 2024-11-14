@@ -3,13 +3,13 @@ using FrontendAPIFinalProject.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using ServerPupusas.ModelDTOs;
 using ServerPupusas.Models;
 
 namespace FrontendAPIFinalProject.Controllers
 {
-
     // http://localhost:5073/api/users/users
-    [Authorize]
+    // [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class UsersController : ControllerBase
@@ -27,48 +27,60 @@ namespace FrontendAPIFinalProject.Controllers
         public async Task<IEnumerable<User>> GetAllUsers()
         {
             return await _userService.GetAllUsers();
-
         }
 
-        [HttpGet]
-        public async Task<IActionResult> GetUsers()
+        [HttpPut("{id}")]
+        public async Task<IActionResult> EditUser(int id, [FromBody] UserCreateDto updatedUser)
         {
-            var email = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value;
-            if (email == null)
-            {
-                return Unauthorized("Invalid token");
-            }
+            var existingUser = await _context.Users.FindAsync(id);
 
-            var authenticatedUser = await _context.Users.FirstOrDefaultAsync(u => u.Email == email);
-            if (authenticatedUser == null)
+            var newUser = new User
             {
-                return Forbid("User not found in the database");
-            }
+                UserId = updatedUser.Id,
+                Name = updatedUser.Name ?? existingUser.Name,
+                Email = updatedUser.Email ?? existingUser.Email,
+                Role = updatedUser.Role ?? existingUser.Role,
+                PasswordHash = updatedUser.PasswordHash ?? existingUser.PasswordHash,
+                CreatedAt = existingUser.CreatedAt,
+            };
 
-            var users = await _context.Users.ToListAsync();
-            return Ok(users);
+            _context.Entry(existingUser).CurrentValues.SetValues(newUser);
+
+            await _context.SaveChangesAsync();
+            return NoContent();
         }
 
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteUser(int id)
+        {
+            var user = await _context.Users.FindAsync(id);
+            if (user == null)
+                return NotFound();
 
-        // [HttpGet("email")]
-        // public async Task<ActionResult<string>> GetUserEmail(HttpContext _httpContext)
-        // {
-        //     if (_httpContext.User?.Identity?.IsAuthenticated != true)
-        //     {
-        //         Console.WriteLine("User is not authenticated");
-        //         return Unauthorized("User is not authenticated.");
-        //     }
+            _context.Users.Remove(user);
+            await _context.SaveChangesAsync();
+            return NoContent();
+        }
 
-        //     string? email = _httpContext.User.FindFirstValue(ClaimTypes.Email);
-        //     Console.WriteLine(email);
-        //     if (string.IsNullOrEmpty(email))
-        //     {
-        //         Console.WriteLine("Email claim not found");
-        //         return NotFound("Email claim not found.");
-        //     }
+        [HttpPost("add")]
+        public async Task<IActionResult> AddUser([FromBody] UserCreateDto newUser)
+        {
+            if (newUser == null)
+                return BadRequest("Invalid data");
 
-        //     Console.WriteLine("Authenticated user's email: " + email);
-        //     return Ok(email);
-        // }
+            var userEntity = new User
+            {
+                Name = newUser.Name,
+                Email = newUser.Email,
+                Role = newUser.Role,
+                PasswordHash = newUser.PasswordHash
+            };
+
+            await _context.Users.AddAsync(userEntity);
+            await _context.SaveChangesAsync();
+
+            return Ok(userEntity);
+        }
+
     }
 }

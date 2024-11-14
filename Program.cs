@@ -28,9 +28,6 @@ builder.Services.AddAuthentication()
             ValidateIssuerSigningKey = true,
             ValidIssuer = builder.Configuration["JwtSettings:Issuer"],
             ValidAudience = builder.Configuration["JwtSettings:Audience"],
-
-            // IssuerSigningKey = new Microsoft.IdentityModel.Tokens.SymmetricSecurityKey(
-            //     System.Text.Encoding.UTF8.GetBytes(builder.Configuration["JwtSettings:SecretKey"]))
         };
     });
 builder.Services.AddCors(options =>
@@ -48,9 +45,6 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseHttpsRedirection();
-
-app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
 app.UseCors("AllowReactClient");
