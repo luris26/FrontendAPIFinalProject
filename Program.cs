@@ -32,14 +32,14 @@ builder.Services.AddAuthentication()
     });
 
 builder.Services.AddCors(options =>
-{
-    options.AddPolicy("AllowReactClient",
-        policy => policy.
-        AllowAnyOrigin()
-            .WithOrigins("https://final-project-luris.duckdns.org")
-            .AllowAnyMethod()
-            .AllowAnyHeader());
-});
+    {
+        options.AddPolicy("AllowAll", builder =>
+        {
+            builder.AllowAnyOrigin()
+                   .AllowAnyMethod()
+                   .AllowAnyHeader();
+        });
+    });
 
 var app = builder.Build();
 
