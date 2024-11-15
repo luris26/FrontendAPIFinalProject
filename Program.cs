@@ -34,9 +34,11 @@ builder.Services.AddAuthentication()
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowReactClient",
-        policy => policy.AllowAnyOrigin()
-                        .AllowAnyMethod()
-                        .AllowAnyHeader());
+        policy => policy.
+        AllowAnyOrigin()
+            .WithOrigins("https://final-project-luris.duckdns.org")
+            .AllowAnyMethod()
+            .AllowAnyHeader());
 });
 
 var app = builder.Build();
@@ -46,7 +48,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
-
+app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
 app.UseCors("AllowReactClient");
