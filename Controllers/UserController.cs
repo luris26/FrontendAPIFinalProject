@@ -33,22 +33,21 @@ namespace FrontendAPIFinalProject.Controllers
         public async Task<IActionResult> EditUser(int id, [FromBody] UserCreateDto updatedUser)
         {
             var existingUser = await _context.Users.FindAsync(id);
-
-            var newUser = new User
+            if (existingUser == null)
             {
-                UserId = updatedUser.Id,
-                Name = updatedUser.Name ?? existingUser.Name,
-                Email = updatedUser.Email ?? existingUser.Email,
-                Role = updatedUser.Role ?? existingUser.Role,
-                PasswordHash = updatedUser.PasswordHash ?? existingUser.PasswordHash,
-                CreatedAt = existingUser.CreatedAt,
-            };
+                return NotFound(new { Message = "User not found" });
+            }
 
-            _context.Entry(existingUser).CurrentValues.SetValues(newUser);
+            existingUser.Name = updatedUser.Name ?? existingUser.Name;
+            existingUser.Email = updatedUser.Email ?? existingUser.Email;
+            existingUser.Role = updatedUser.Role ?? existingUser.Role;
+            existingUser.PasswordHash = updatedUser.PasswordHash ?? existingUser.PasswordHash;
 
             await _context.SaveChangesAsync();
-            return NoContent();
+
+            return Ok(new { Message = "User updated successfully" });
         }
+
 
         [HttpDelete("delete/{id}")]
         public async Task<IActionResult> DeleteUser(int id)

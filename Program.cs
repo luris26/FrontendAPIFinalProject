@@ -9,10 +9,12 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddControllers();
+builder.Services.AddCors();
 
 builder.Services.AddDbContextFactory<ApplicationDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("PostgresConnection")));
 builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IMenuService, MenuService>();
 builder.Services.AddScoped<JwtService>();
 
 builder.Services.AddAuthentication()
@@ -31,18 +33,10 @@ builder.Services.AddAuthentication()
         };
     });
 
-builder.Services.AddCors(options =>
-    {
-        options.AddPolicy("AllowAll", builder =>
-        {
-            builder.AllowAnyOrigin()
-                   .AllowAnyMethod()
-                   .AllowAnyHeader();
-        });
-    });
-
 var app = builder.Build();
 
+
+app.UseCors(p => p.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin());
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
