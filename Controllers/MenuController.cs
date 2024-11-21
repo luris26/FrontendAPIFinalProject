@@ -1,7 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
 using FrontendAPIFinalProject.Services;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 using ServerPupusas.Models;
 using ServerPupusas.ModelDTOs;
 

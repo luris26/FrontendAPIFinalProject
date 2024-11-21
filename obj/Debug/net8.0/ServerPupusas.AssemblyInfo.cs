@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("ServerPupusas")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+68ccf0df5b15c6dfbcbc5a093618538462a66bb6")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+4c7ed103228b7561be1141578ce93ec23c1bacb2")]
 [assembly: System.Reflection.AssemblyProductAttribute("ServerPupusas")]
 [assembly: System.Reflection.AssemblyTitleAttribute("ServerPupusas")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
