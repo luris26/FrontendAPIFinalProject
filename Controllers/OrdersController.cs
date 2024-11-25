@@ -53,13 +53,11 @@ namespace ServerPupusas.Controllers
         {
             var order = await _context.Orders
                 .Include(o => o.OrderItems)
-                .ThenInclude(oi => oi.Menu)
                 .FirstOrDefaultAsync(o => o.OrderId == id);
 
-            if (order == null)
-                return NotFound();
+            if (order == null) return NotFound();
 
-            var result = new OrderDTO
+            var orderDto = new OrderDTO
             {
                 OrderId = order.OrderId,
                 TableId = order.TableId,
@@ -67,19 +65,20 @@ namespace ServerPupusas.Controllers
                 Status = order.Status,
                 TotalAmount = order.TotalAmount,
                 CreatedAt = order.CreatedAt,
-                OrderItems = order.OrderItems.Select(oi => new OrderItemDTO
+                OrderItems = order.OrderItems.Select(item => new OrderItemDTO
                 {
-                    MenuId = oi.MenuId,
-                    Quantity = oi.Quantity,
-                    Price = oi.Price
+                    MenuId = item.MenuId,
+                    Quantity = item.Quantity,
+                    Price = item.Price
                 }).ToList()
             };
 
-            return Ok(result);
+            return Ok(orderDto);
         }
 
+
         // POST: api/orders
-        [HttpPost]
+        [HttpPost("addmenu")]
         public async Task<ActionResult<Order>> CreateOrder(OrderDTO newOrderDto)
         {
             if (newOrderDto.OrderItems == null || !newOrderDto.OrderItems.Any())
@@ -91,7 +90,7 @@ namespace ServerPupusas.Controllers
                 UserId = newOrderDto.UserId,
                 Status = newOrderDto.Status ?? "Pending",
                 TotalAmount = newOrderDto.TotalAmount,
-                CreatedAt = DateTime.UtcNow,
+                CreatedAt = DateTime.SpecifyKind(DateTime.UtcNow, DateTimeKind.Unspecified),
                 OrderItems = newOrderDto.OrderItems.Select(item => new OrderItem
                 {
                     MenuId = item.MenuId,
