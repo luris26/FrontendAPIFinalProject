@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ServerPupusas.Models;
 using ServerPupusas.ModelDTOs;
+using Newtonsoft.Json;
 
 namespace ServerPupusas.Controllers
 {
@@ -16,7 +17,6 @@ namespace ServerPupusas.Controllers
             _context = context;
         }
 
-        // GET: api/orders
         [HttpGet]
         public async Task<ActionResult<IEnumerable<OrderDTO>>> GetOrders([FromQuery] string? status = null)
         {
@@ -47,7 +47,6 @@ namespace ServerPupusas.Controllers
             return Ok(result);
         }
 
-        // GET: api/orders/{id}
         [HttpGet("{id}")]
         public async Task<ActionResult<OrderDTO>> GetOrder(int id)
         {
@@ -76,36 +75,43 @@ namespace ServerPupusas.Controllers
             return Ok(orderDto);
         }
 
-
-        // POST: api/orders
         [HttpPost("addmenu")]
-        public async Task<ActionResult<Order>> CreateOrder(OrderDTO newOrderDto)
+        public async Task<ActionResult<Order>> CreateOrder([FromBody] OrderDTO newOrderDto)
         {
-            if (newOrderDto.OrderItems == null || !newOrderDto.OrderItems.Any())
-                return BadRequest("El pedido debe contener al menos un artículo.");
-
-            var newOrder = new Order
+            try
             {
-                TableId = newOrderDto.TableId,
-                UserId = newOrderDto.UserId,
-                Status = newOrderDto.Status ?? "Pending",
-                TotalAmount = newOrderDto.TotalAmount,
-                CreatedAt = DateTime.SpecifyKind(DateTime.UtcNow, DateTimeKind.Unspecified),
-                OrderItems = newOrderDto.OrderItems.Select(item => new OrderItem
+                Console.WriteLine($"Received Order: {JsonConvert.SerializeObject(newOrderDto)}");
+
+                if (newOrderDto.OrderItems == null || !newOrderDto.OrderItems.Any())
+                    return BadRequest("El pedido debe contener al menos un artículo.");
+
+                var newOrder = new Order
                 {
-                    MenuId = item.MenuId,
-                    Quantity = item.Quantity,
-                    Price = item.Price
-                }).ToList()
-            };
+                    TableId = newOrderDto.TableId,
+                    UserId = newOrderDto.UserId,
+                    Status = newOrderDto.Status ?? "Pending",
+                    TotalAmount = newOrderDto.TotalAmount,
+                    CreatedAt = DateTime.UtcNow,
+                    OrderItems = newOrderDto.OrderItems.Select(item => new OrderItem
+                    {
+                        MenuId = item.MenuId,
+                        Quantity = item.Quantity,
+                        Price = item.Price
+                    }).ToList()
+                };
 
-            _context.Orders.Add(newOrder);
-            await _context.SaveChangesAsync();
+                _context.Orders.Add(newOrder);
+                await _context.SaveChangesAsync();
 
-            return CreatedAtAction(nameof(GetOrder), new { id = newOrder.OrderId }, newOrder);
+                return CreatedAtAction(nameof(GetOrder), new { id = newOrder.OrderId }, newOrder);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error creating order: {ex.Message}");
+                return StatusCode(500, "Internal server error. Please try again.");
+            }
         }
 
-        // PUT: api/orders/{id}
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateOrder(int id, OrderDTO updatedOrderDto)
         {
@@ -137,7 +143,6 @@ namespace ServerPupusas.Controllers
             return NoContent();
         }
 
-        // PUT: api/orders/complete/{id}
         [HttpPut("complete/{id}")]
         public async Task<IActionResult> MarkOrderAsCompleted(int id)
         {
@@ -152,7 +157,6 @@ namespace ServerPupusas.Controllers
             return NoContent();
         }
 
-        // DELETE: api/orders/{id}
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteOrder(int id)
         {

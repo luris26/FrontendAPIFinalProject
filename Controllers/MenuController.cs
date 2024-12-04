@@ -79,6 +79,7 @@ namespace ServerPupusas.Controllers
 
             return Ok(menuItem);
         }
+
         [HttpDelete("delete/{id}")]
         public async Task<ActionResult> DeleteMenuItem(int id)
         {
@@ -97,7 +98,7 @@ namespace ServerPupusas.Controllers
 
             return NoContent();
         }
-        
+
         [HttpGet("{id}")]
         public async Task<ActionResult<Menu>> GetMenuItemById(int id)
         {

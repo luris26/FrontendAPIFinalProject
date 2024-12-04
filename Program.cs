@@ -22,12 +22,14 @@ builder.Services.AddScoped<JwtService>();
 builder.Services.AddAuthentication()
     .AddJwtBearer(options =>
     {
-        options.Authority = "https://auth.snowse.duckdns.org/realms/advanced-frontend/";
+        //auth.snowse-ts.duckdns.org
+        options.Authority = "https://auth.snowse-ts.duckdns.org/realms/advanced-frontend-ts/";
+        // options.Authority = "https://auth.snowse.duckdns.org/realms/advanced-frontend/";
         options.Audience = "luris-client";
         options.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters
         {
             ValidateIssuer = true,
-            ValidateAudience = true,
+            ValidateAudience = true,    
             ValidateLifetime = true,
             ValidateIssuerSigningKey = true,
             ValidIssuer = builder.Configuration["JwtSettings:Issuer"],
@@ -47,6 +49,5 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
-app.UseCors("AllowReactClient");
 app.MapControllers();
 app.Run();
