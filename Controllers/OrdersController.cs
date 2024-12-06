@@ -85,13 +85,18 @@ namespace ServerPupusas.Controllers
                 if (newOrderDto.OrderItems == null || !newOrderDto.OrderItems.Any())
                     return BadRequest("El pedido debe contener al menos un artículo.");
 
+                // Verificar que table_id exista en la tabla referenciada
+                var tableExists = await _context.Tables.AnyAsync(t => t.TableId == newOrderDto.TableId);
+                if (!tableExists)
+                    return BadRequest($"La mesa con ID {newOrderDto.TableId} no existe.");
+
                 var newOrder = new Order
                 {
                     TableId = newOrderDto.TableId,
                     UserId = newOrderDto.UserId,
-                    Status = newOrderDto.Status ?? "Pending",
+                    Status = newOrderDto.Status ?? "pendiente",
                     TotalAmount = newOrderDto.TotalAmount,
-                    CreatedAt = DateTime.UtcNow,
+                    CreatedAt = DateTime.UtcNow.ToLocalTime(), // Conversión de fecha
                     OrderItems = newOrderDto.OrderItems.Select(item => new OrderItem
                     {
                         MenuId = item.MenuId,
@@ -111,6 +116,8 @@ namespace ServerPupusas.Controllers
                 return StatusCode(500, "Internal server error. Please try again.");
             }
         }
+
+
 
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateOrder(int id, OrderDTO updatedOrderDto)
@@ -160,15 +167,30 @@ namespace ServerPupusas.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteOrder(int id)
         {
-            var order = await _context.Orders.FindAsync(id);
+            try
+            {
+                var order = await _context.Orders.Include(o => o.OrderItems).FirstOrDefaultAsync(o => o.OrderId == id);
+                if (order == null)
+                {
+                    return NotFound("La orden no existe.");
+                }
 
-            if (order == null)
-                return NotFound();
+                // Eliminar los elementos relacionados
+                _context.OrderItems.RemoveRange(order.OrderItems);
 
-            _context.Orders.Remove(order);
-            await _context.SaveChangesAsync();
+                // Eliminar la orden
+                _context.Orders.Remove(order);
 
-            return NoContent();
+                await _context.SaveChangesAsync();
+
+                return NoContent();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error eliminando la orden: {ex.Message}");
+                return StatusCode(500, "Error interno del servidor. No se pudo eliminar la orden.");
+            }
         }
+
     }
 }

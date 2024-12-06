@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
 
 namespace ServerPupusas.Models;
 
@@ -17,5 +18,6 @@ public partial class OrderItem
 
     public virtual Menu? Menu { get; set; }
 
+    [JsonIgnore]
     public virtual Order? Order { get; set; }
 }

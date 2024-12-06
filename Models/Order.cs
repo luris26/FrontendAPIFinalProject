@@ -24,4 +24,8 @@ public partial class Order
     public virtual Table? Table { get; set; }
 
     public virtual User? User { get; set; }
+    public void SetCreatedAt(DateTime dateTime)
+    {
+        CreatedAt = DateTime.SpecifyKind(dateTime, DateTimeKind.Unspecified);
+    }
 }
